@@ -42,11 +42,13 @@ class Store {
    * Добавление новой записи
    */
   addItem() {
-    this.setState({
-      ...this.state,
-      list: [...this.state.list, { code: this.state.list.length + 1, title: 'Новая запись' }],
-    });
-  }
+   const newList = [...this.state.list];
+   const newCode = newList.length > 0 ? newList[newList.length - 1].code + 1 : (this.state.maxCode || 1);
+   this.setState({
+     list: [...newList, { code: newCode, title: 'Новая запись' }],
+     maxCode: newCode + 1
+   });
+ }
 
   /**
    * Удаление записи по коду
@@ -69,11 +71,17 @@ class Store {
       list: this.state.list.map(item => {
         if (item.code === code) {
           item.selected = !item.selected;
-        }
+          if (item.selected){
+            (item.count > 0) ? item.count++ : item.count=1;;
+          }
+         } else {item.selected = false;}
         return item;
       }),
     });
   }
 }
+
+
+
 
 export default Store;
